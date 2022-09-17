@@ -20,6 +20,9 @@
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
         <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;500&display=swap" rel="stylesheet">
 
+        <!-- JQuery -->
+        <script src="js/jquery-3.6.0.min.js"></script>
+
     </head>
 
     <body>

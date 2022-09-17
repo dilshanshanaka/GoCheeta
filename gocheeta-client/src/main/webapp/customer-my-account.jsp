@@ -19,50 +19,23 @@
                 <!-- Profile Tab Starts -->
                 <div class="tab-pane fade show active py-4 px-5" id="v-pills-home" role="tabpanel"
                      aria-labelledby="v-pills-home-tab" tabindex="0">
-                    <div class="row">
-                        <h4 class="mb-3">Profile</h4>
-                        <div class="col-md-6">
-                            <div class="row mb-3">
-                                <label for="firstName" class="col-sm-3 col-form-label">First Name</label>
-                                <div class="col-sm-9">
-                                    <input type="text" class="form-control" value="John">
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="row mb-3">
-                                <label for="lastName" class="col-sm-3 col-form-label">Last Name</label>
-                                <div class="col-sm-9">
-                                    <input type="text" class="form-control" value="Doe">
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="row mb-3">
-                                <label for="lastName" class="col-sm-3 col-form-label">Email</label>
-                                <div class="col-sm-9">
-                                    <input type="email" class="form-control" value="johndoe@gmail.com" disabled>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="row mb-3">
-                                <label for="lastName" class="col-sm-3 col-form-label">Mobile</label>
-                                <div class="col-sm-9">
-                                    <input type="text" class="form-control" value="0771234567">
-                                </div>
-                            </div>
-                        </div>
-                        <div class="d-grid gap-2 d-md-flex justify-content-md-end">
-                            <button class="btn btn-primary me-md-2" type="button">Update</button>
-                        </div>
+                    <div class="row profile-row">
+
                     </div>
                     <hr>
 
                     <h5 class="my-3">Change Password</h5>
                     <div class="col-md-8">
                         <div class="row mb-3">
-                            <label for="firstName" class="col-sm-4 col-form-label">New Password</label>
+                            <label for="firstName" class="col-sm-4 col-form-label">Current Password</label>
+                            <div class="col-sm-8">
+                                <input type="text" class="form-control">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-8">
+                        <div class="row mb-3">
+                            <label for="lastName" class="col-sm-4 col-form-label">New Password</label>
                             <div class="col-sm-8">
                                 <input type="text" class="form-control">
                             </div>
@@ -71,14 +44,6 @@
                     <div class="col-md-8">
                         <div class="row mb-3">
                             <label for="lastName" class="col-sm-4 col-form-label">Confirm Password</label>
-                            <div class="col-sm-8">
-                                <input type="text" class="form-control">
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-8">
-                        <div class="row mb-3">
-                            <label for="lastName" class="col-sm-4 col-form-label">Current Password</label>
                             <div class="col-sm-8">
                                 <input type="text" class="form-control">
                             </div>
@@ -136,5 +101,88 @@
         </div>
     </div>
 </div>
+
+<script>
+    var profile_data_url = 'http://localhost:8080/gocheeta-web-services/api/v1/customer/2';
+
+    $.ajax({
+        type: "GET",
+        url: profile_data_url,
+        dataType: "json",
+        success: function (response) {
+            console.log(response.firstName);
+            console.log(response.lastName);
+
+            var profile = `<h4 class="mb-3">Profile</h4>
+            <form id="profileUpdate">
+        <div class="row">
+                        <div class="col-md-6">
+                            <div class="row mb-3">
+                                <label for="firstName" class="col-sm-3 col-form-label">First Name</label>
+                                <div class="col-sm-9">
+                                    <input type="text" id="firstName" class="form-control" value="` + response.firstName + `">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="row mb-3">
+                                <label for="lastName" class="col-sm-3 col-form-label">Last Name</label>
+                                <div class="col-sm-9">
+                                    <input type="text" id="lastName" class="form-control" value="` + response.lastName + `">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="row mb-3">
+                                <label for="lastName" class="col-sm-3 col-form-label">Email</label>
+                                <div class="col-sm-9">
+                                    <input type="email" class="form-control" value="` + response.email + `" disabled>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="row mb-3">
+                                <label for="lastName" class="col-sm-3 col-form-label">Mobile</label>
+                                <div class="col-sm-9">
+                                    <input type="text" id="mobile" class="form-control" value="` + response.mobile + `">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                            <button class="btn btn-primary me-md-2" type="submit">Update</button>
+                        </div>
+        </div>
+            </form>`;
+            $(".profile-row").append(profile);
+        }
+    });
+
+
+    $(document).ready(function () {
+        $("#profileUpdate").submit(function (event) {
+            event.preventDefault();
+            var formData = {
+                firstName: $("#firstName").val(),
+                lastName: $("#lastName").val(),
+                mobile: $("#mobile").val()
+            };
+
+            console.log(formData);
+            $.ajax({
+                type: "PUT",
+                url: "http://localhost:8080/gocheeta-web-services/api/v1/customer/2",
+                contentType: 'application/json',
+                data: JSON.stringify(formData),
+                encode: true
+
+            }).done(function (data) {
+                location.reload();
+            });
+            
+        });
+    });
+
+
+</script>
 
 <%@ include file = "footer.jsp" %>
