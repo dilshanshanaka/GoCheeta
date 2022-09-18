@@ -61,7 +61,7 @@
                      aria-labelledby="v-pills-profile-tab" tabindex="0">
                     <div class="row">
                         <h4 class="mb-3">My Bookings</h4>
-                        <table class="table table-hover">
+                        <table class="table table-hover table-sm">
                             <thead>
                                 <tr>
                                     <th scope="col">#</th>
@@ -78,25 +78,12 @@
                                     <th scope="col">Review</th>
                                 </tr>
                             </thead>
-                            <tbody>
-                                <tr>
-                                    <th scope="row">1</th>
-                                    <td>2022/09/10 12.20 PM</td>
-                                    <td>Bauddhaloka Mawatha</td>
-                                    <td>Ananda Rajakaruna Mawatha</td>
-                                    <td>Colombo</td>
-                                    <td>Alex Doe</td>
-                                    <td>Micro</td>
-                                    <td>WP CAB 1234</td>
-                                    <td>Toyota Vitz</td>
-                                    <td>600.00</td>
-                                    <td>Completed</td>
-                                    <td><button type="button" class="btn btn-primary btn-sm">View</button></td>
-                                </tr>
+                            <tbody class="table-data">
+
                             </tbody>
                         </table>
                     </div>
-                </div>
+                </div>                           
             </div>
         </div>
     </div>
@@ -110,8 +97,6 @@
         url: profile_data_url,
         dataType: "json",
         success: function (response) {
-            console.log(response.firstName);
-            console.log(response.lastName);
 
             var profile = `<h4 class="mb-3">Profile</h4>
             <form id="profileUpdate">
@@ -178,11 +163,68 @@
             }).done(function (data) {
                 location.reload();
             });
-            
+
         });
     });
 
+    var booking_data_url = 'http://localhost:8080/gocheeta-web-services/api/v1/booking/customer/1';
 
+    $.ajax({
+        type: "GET",
+        url: booking_data_url,
+        dataType: "json",
+        success: function (response) {
+
+            $.each(response, function (key, val) {
+
+
+                var tableRow = `<tr>
+                                    <th scope="row">` + val.bookingId + `</th>
+                                    <td>2022/09/10 12.20 PM</td>
+                                    <td>` + val.pickup + `</td>
+                                    <td>` + val.destination + `</td>
+                                    <td>` + val.city + `</td>
+                                    <td>` + val.driverName + `</td>
+                                    <td>` + val.type + `</td>
+                                    <td>` + val.regNo + `</td>
+                                    <td>` + val.make + ` ` + val.model + `</td>
+                                    <td> Rs. ` + val.fare + `</td>
+                                    <td>` + val.status + `</td>
+                                    <td>
+                                        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#model` + val.bookingId + `">
+                                            View
+                                        </button>
+                                    </td>
+                                </tr>`;
+
+                var feedback = `
+                                <!-- Modal -->
+                                <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                  <div class="modal-dialog">
+                                    <div class="modal-content">
+                                      <div class="modal-header">
+                                        <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                      </div>
+                                      <div class="modal-body">
+                                        ...
+                                      </div>
+                                      <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                        <button type="button" class="btn btn-primary">Save changes</button>
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div>`;
+
+                $(".table-data").append(tableRow);
+                $(".modal").append(feedback);
+
+
+            });
+        }
+    });
 </script>
 
+<div class="modal"></div>
 <%@ include file = "footer.jsp" %>
