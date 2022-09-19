@@ -5,12 +5,12 @@ package com.gocheeta.web.services;
  * @author Dilshan
  */
 public class Branch {
-
     private int branchId;
     private String city;
     private String address_line_one;
     private String address_line_two;
     private String type;
+    private double totalEarnings;
 
     public Branch() {
         this.branchId = 0;
@@ -18,15 +18,17 @@ public class Branch {
         this.address_line_one = "";
         this.address_line_two = "";
         this.type = "";
+        this.totalEarnings = 0.00;
     }
 
     public Branch(int branchId, String city, String addressLineOne,
-            String addressLineTwo, String type) {
-        this.branchId = 0;
-        this.city = "";
-        this.address_line_one = "";
-        this.address_line_two = "";
-        this.type = "";
+            String addressLineTwo, String type, double totalEarnings) {
+        this.branchId = branchId;
+        this.city = city;
+        this.address_line_one = addressLineOne;
+        this.address_line_two = addressLineTwo;
+        this.type = type;
+        this.totalEarnings = totalEarnings;
     }
 
     public int getBranchId() {
@@ -67,6 +69,14 @@ public class Branch {
 
     public void setType(String type) {
         this.type = type;
+    }
+
+    public double getTotalEarnings() {
+        return totalEarnings;
+    }
+
+    public void setTotalEarnings(double totalEarnings) {
+        this.totalEarnings = totalEarnings;
     }
     
     

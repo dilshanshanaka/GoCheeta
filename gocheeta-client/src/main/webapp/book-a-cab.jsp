@@ -4,7 +4,14 @@
 <%@page import="java.io.BufferedReader"%>
 
 <%@ include file = "header.jsp" %>
+<script>
+    var userId = Cookies.get('userId');
+    var userRole = Cookies.get('role');
 
+    if (userId == "undefined" || userRole == null || user != "customer") {
+        window.location.replace("customer-login.jsp");
+    }
+</script>
 <!-- Header Start -->
 <div class="about border d-flex align-items-center justify-content-center"
      style="background-color: #104a8e; height: 180px;">
@@ -192,7 +199,7 @@
             $.each(response, function (key, val) {
                 var vehicleCategory = `
                     <div class="col-md-3 mx-3 shadow-none p-3 mb-5 bg-light rounded">
-                        <img src="` + val.imagePath + `" class="rounded img-fluid w-100" alt="">
+                        <img src="` + val.imagePath + `" class="rounded img-fluid w-100" alt="Vehicle Category Image">
                                 <div class="form-check">
                                 <input class="form-check-input" type="radio" name="vehicleType" id="vehicleType">
                         <label class="form-check-label" for="flexRadioDefault1">
@@ -202,10 +209,11 @@
                         <small>Seats - ` + val.passengerSeats + `</small>
                     </div>`;
                 $(".vehicle-category").append(vehicleCategory);
-
             });
         }
     });
+
+
 
     var booking_data_url = 'http://localhost:8080/gocheeta-web-services/api/v1/booking/2';
 
@@ -227,7 +235,6 @@
                     $(".pending").append(pendingMessage);
                     setInterval('location.reload()', 7000);
                 } else {
-                    console.log(response);
                     var bookingConfirmation = `
                     <div class="row mt-3 justify-content-md-center">
                         <div class="col-md-6 shadow-lg p-3 mb-5 bg-body rounded p-4">

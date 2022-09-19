@@ -23,6 +23,7 @@
         <!-- JQuery -->
         <script src="js/jquery-3.6.0.min.js"></script>
 
+        <script src="https://cdn.jsdelivr.net/npm/js-cookie@3.0.1/dist/js.cookie.min.js"></script>
     </head>
 
     <body>
@@ -59,8 +60,8 @@
                 <%
                     boolean isLoggedin = true;
                     if (isLoggedin) { %>
-                <a class="btn btn-outline-primary" type="button" href="customer-login.jsp">My Account</a>
-                <a class="btn btn-outline-danger mx-2" type="button" href="logout.jsp">Logout</a>
+                <a class="btn btn-outline-primary" type="button" href="customer-my-account.jsp">My Account</a>
+                <a class="btn btn-outline-danger mx-2" type="button" onclick="logout()">Logout</a>
                 <% } else { %>
                 <a class="btn btn-outline-primary" type="button" href="customer-login.jsp">Login</a>
                 <% }%>
@@ -68,3 +69,13 @@
             </div>
         </nav>
         <!-- Navbar Ends -->
+
+        <script>
+            // Logout Function
+            function logout() {
+                Cookies.remove('userId');
+                Cookies.remove('role');
+                location.reload();
+            }
+
+        </script>

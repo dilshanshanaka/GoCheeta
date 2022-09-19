@@ -1,4 +1,13 @@
 <%@ include file = "header.jsp" %>
+<script>
+    var userId = Cookies.get('userId');
+    var userRole = Cookies.get('role');
+
+    if (userId == "undefined" || userRole == null || user != "customer") {
+        window.location.replace("customer-login.jsp");
+    }
+
+</script>
 
 <div class="container my-5">
     <h2><strong> My Account</strong></h2>
@@ -25,35 +34,38 @@
                     <hr>
 
                     <h5 class="my-3">Change Password</h5>
-                    <div class="col-md-8">
-                        <div class="row mb-3">
-                            <label for="firstName" class="col-sm-4 col-form-label">Current Password</label>
-                            <div class="col-sm-8">
-                                <input type="text" class="form-control">
+                    <form id="changePassword">
+                        <div class="alert-pw-msg" id="alertMsg"></div>
+                        <div class="col-md-8">
+                            <div class="row mb-3">
+                                <label for="firstName" class="col-sm-4 col-form-label">New Password</label>
+                                <div class="col-sm-8">
+                                    <input type="password" class="form-control" id="newPassword">
+                                </div>
                             </div>
                         </div>
-                    </div>
-                    <div class="col-md-8">
-                        <div class="row mb-3">
-                            <label for="lastName" class="col-sm-4 col-form-label">New Password</label>
-                            <div class="col-sm-8">
-                                <input type="text" class="form-control">
+                        <div class="col-md-8">
+                            <div class="row mb-3">
+                                <label for="lastName" class="col-sm-4 col-form-label">Confirm Password</label>
+                                <div class="col-sm-8">
+                                    <input type="password" class="form-control" id="cPassword">
+                                </div>
                             </div>
                         </div>
-                    </div>
-                    <div class="col-md-8">
-                        <div class="row mb-3">
-                            <label for="lastName" class="col-sm-4 col-form-label">Confirm Password</label>
-                            <div class="col-sm-8">
-                                <input type="text" class="form-control">
+                        <div class="col-md-8">
+                            <div class="row mb-3">
+                                <label for="lastName" class="col-sm-4 col-form-label">Current Password</label>
+                                <div class="col-sm-8">
+                                    <input type="password" class="form-control" id="oldPassword">
+                                </div>
                             </div>
                         </div>
-                    </div>
-                    <div class="col-md-8">
-                        <div class="d-grid gap-2 d-md-flex justify-content-md-end">
-                            <button class="btn btn-primary me-md-2" type="button">Update</button>
+                        <div class="col-md-8">
+                            <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                                <button class="btn btn-primary me-md-2" type="submit">Update</button>
+                            </div>
                         </div>
-                    </div>
+                    </form>
                 </div>
                 <!-- Profile Tab Ends -->
 
@@ -90,7 +102,7 @@
 </div>
 
 <script>
-    var profile_data_url = 'http://localhost:8080/gocheeta-web-services/api/v1/customer/2';
+    var profile_data_url = 'http://localhost:8080/gocheeta-web-services/api/v1/customer/' + userId;
 
     $.ajax({
         type: "GET",
@@ -155,7 +167,7 @@
             console.log(formData);
             $.ajax({
                 type: "PUT",
-                url: "http://localhost:8080/gocheeta-web-services/api/v1/customer/2",
+                url: "http://localhost:8080/gocheeta-web-services/api/v1/customer/" + userId,
                 contentType: 'application/json',
                 data: JSON.stringify(formData),
                 encode: true
@@ -167,7 +179,7 @@
         });
     });
 
-    var booking_data_url = 'http://localhost:8080/gocheeta-web-services/api/v1/booking/customer/1';
+    var booking_data_url = 'http://localhost:8080/gocheeta-web-services/api/v1/booking/customer/'+ userId;
 
     $.ajax({
         type: "GET",
@@ -222,6 +234,34 @@
 
 
             });
+        }
+    });
+
+    // Change Password
+    $("#changePassword").submit(function (event) {
+        event.preventDefault();
+        document.getElementById("alertMsg").innerHTML = "";
+
+        if ($("#newPassword").val() === $("#cPassword").val()) {
+            var formData = {
+                id: userId,
+                password: $("#oldPassword").val(),
+                newPassword: $("#newPassword").val()
+            };
+
+            $.ajax({
+                type: "PUT",
+                url: "http://localhost:8080/gocheeta-web-services/api/v1/user/change-password/" + userId,
+                contentType: 'application/json',
+                data: JSON.stringify(formData),
+                encode: true
+            }).done(function (data) {
+                location.reload();
+            });
+        } else {
+            var errorMsg = `<div class="alert alert-danger" role="alert">
+                                Confirm password mismatch.</div>`;
+            $(".alert-pw-msg").append(errorMsg);
         }
     });
 </script>
