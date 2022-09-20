@@ -1,5 +1,7 @@
 package com.gocheeta.web.services;
 
+import java.util.Date;
+
 /**
  *
  * @author Dilshan
@@ -25,6 +27,7 @@ public class Booking {
     private String model;
     private String regNo;
     private String type;
+    private Date createdDate;
         
     public Booking() {
         this.bookingId = 0;
@@ -50,7 +53,7 @@ public class Booking {
     public Booking(int bookingId, int branchId, String pickup, String destination,
             float fare, int customerId, int vehicleCategoryId, int vehicleId, String driverName,
             int driverId, String status, String customerName, String customerMobile, 
-            String driverMobile, String city, String make, String model, String regNo) {
+            String driverMobile, String city, String make, String model, String regNo, Date createdDate) {
         this.bookingId = bookingId;
         this.branchId = branchId;
         this.pickup = pickup;
@@ -69,8 +72,18 @@ public class Booking {
         this.make = make;
         this.model = model;
         this.regNo = regNo;
+        this.createdDate = createdDate;
     }
 
+    public Date getCreatedDate() {
+        return createdDate;
+    }
+
+    public void setCreatedDate(Date createdDate) {
+        this.createdDate = createdDate;
+    }
+
+    
     public int getBookingId() {
         return bookingId;
     }

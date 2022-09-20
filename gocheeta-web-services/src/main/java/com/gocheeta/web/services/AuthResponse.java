@@ -8,12 +8,12 @@ package com.gocheeta.web.services;
 public class AuthResponse extends ResponseMessage{
     private int userId;
     private String role;
-    
+
     public AuthResponse(){
         this.userId = 0;
         this.role = "";
     }
-    
+  
     public AuthResponse(int userId, String role){
         this.userId = userId;
         this.role = role;

@@ -51,7 +51,7 @@
                     Cookies.set('userId', data.userId);
                     Cookies.set('role', data.role);
 
-                    window.location.replace("admin.jsp");
+                    window.location.replace("admin-dashboard.jsp");
                 },
                 error: function (data) {
                     var errorMsg = `<div class="alert alert-danger" role="alert">

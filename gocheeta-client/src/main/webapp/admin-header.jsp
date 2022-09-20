@@ -20,6 +20,7 @@
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
         <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;500&display=swap" rel="stylesheet">
 
+
         <!-- JQuery -->
         <script src="js/jquery-3.6.0.min.js"></script>
 
@@ -43,34 +44,37 @@
                 <div class="collapse navbar-collapse" id="navbarSupportedContent">
                     <ul class="navbar-nav mx-auto mb-2 mb-lg-0">
                         <li class="nav-item">
-                            <a class="nav-link active" aria-current="page" href="index.jsp">Home</a>
+                            <a class="nav-link active" aria-current="page" href="admin-dashboard.jsp">Dashboard</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="book-a-cab.jsp">Book a Cab</a>
+                            <a class="nav-link" href="admin-users.jsp">Users</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="about.jsp">About</a>
+                            <a class="nav-link" href="admin-bookings.jsp">Bookings</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="contact.jsp">Contact</a>
+                            <a class="nav-link" href="admin-vehicles.jsp">Vehicles</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="admin-add-new-driver.jsp">Add New Driver</a>
                         </li>
                     </ul>
                 </div>
-
-                <%
-                    boolean isLoggedin = true;
-                    if (isLoggedin) { %>
-                <a class="btn btn-outline-primary" type="button" href="customer-my-account.jsp">My Account</a>
                 <a class="btn btn-outline-danger mx-2" type="button" onclick="logout()">Logout</a>
-                <% } else { %>
-                <a class="btn btn-outline-primary" type="button" href="customer-login.jsp">Login</a>
-                <% }%>
-
             </div>
         </nav>
         <!-- Navbar Ends -->
 
         <script>
+
+            var userId = Cookies.get('userId');
+            var userRole = Cookies.get('role');
+
+            if (userId == "undefined" || userRole == "undefined" || userRole != "admin") {
+                window.location.replace("admin-login.jsp");
+            }
+
+
             // Logout Function
             function logout() {
                 Cookies.remove('userId');
@@ -78,13 +82,6 @@
                 location.reload();
             }
 
-            var userId = Cookies.get('userId');
-            var userRole = Cookies.get('role');
-
-//
-//    if (userId == "undefined" || userRole == null || user != "customer") {
-//        window.location.replace("customer-login.jsp");
-//    }
 
 
         </script>

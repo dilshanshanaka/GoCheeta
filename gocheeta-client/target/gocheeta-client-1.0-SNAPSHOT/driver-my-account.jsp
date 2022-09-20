@@ -3,15 +3,11 @@
     var userId = Cookies.get('userId');
     var userRole = Cookies.get('role');
 
-    if (userId == "undefined" || userRole == null || user != "customer") {
+    if (userId == "undefined" || userRole == "undefined" || userRole != "driver") {
         window.location.replace("driver-login.jsp");
     }
 
-//    var loggedIn = false;
-//
-//    if (loggedIn) {
-//        window.location.replace("driver-login.jsp");
-//    }
+
 </script>
 <div class="container my-5">
     <h2><strong> My Account</strong></h2>
@@ -93,20 +89,8 @@
                                     <th scope="col"></th>
                                 </tr>
                             </thead>
-                            <tbody>
-                                <tr>
-                                    <td>2022/09/10 12.20 PM</td>
-                                    <td>Bauddhaloka Mawatha</td>
-                                    <td>Ananda Rajakaruna Mawatha</td>
-                                    <td>Colombo</td>
-                                    <td>Alex Doe</td>
-                                    <td>077 1234567</td>
-                                    <td>Micro</td>
-                                    <td>WP CAB 1234</td>
-                                    <td>Toyota Vitz</td>
-                                    <td>600.00</td>
-                                    <td><button type="button" class="btn btn-success btn-sm">Accept</button></td>
-                                </tr>
+                            <tbody class="ongoingTableRow">
+
                             </tbody>
                         </table>
                         <h4 class="my-3">Previous Bookings</h4>
@@ -124,24 +108,10 @@
                                     <th scope="col">Make & Model</th>
                                     <th scope="col">Fare (LKR)</th>
                                     <th scope="col">Status</th>
-                                    <th scope="col">Review</th>
                                 </tr>
                             </thead>
-                            <tbody>
-                                <tr>
-                                    <th scope="row">1</th>
-                                    <td>2022/09/10 12.20 PM</td>
-                                    <td>Bauddhaloka Mawatha</td>
-                                    <td>Ananda Rajakaruna Mawatha</td>
-                                    <td>Colombo</td>
-                                    <td>Alex Doe</td>
-                                    <td>Micro</td>
-                                    <td>WP CAB 1234</td>
-                                    <td>Toyota Vitz</td>
-                                    <td>600.00</td>
-                                    <td>Completed</td>
-                                    <td><button type="button" class="btn btn-primary btn-sm">View</button></td>
-                                </tr>
+                            <tbody class="oldDataTableRow">
+
                             </tbody>
                         </table>
                     </div>
@@ -253,6 +223,96 @@
             }
         });
     });
+
+
+    var _url_past = 'http://localhost:8080/gocheeta-web-services/api/v1/booking/driver/past/' + userId;
+
+    $.ajax({
+        type: "GET",
+        url: _url_past,
+        dataType: "json",
+        success: function (response) {
+            console.log(response);
+            $.each(response, function (key, val) {
+                var oldDataTableRow = `
+                                <tr>
+                                    <th scope="row">` + val.bookingId + `</th>
+                                    <td>` + val.createdDate + `</td>
+                                    <td>` + val.pickup + `</td>
+                                    <td>` + val.destination + `</td>
+                                    <td>` + val.city + `</td>
+                                    <td>` + val.customerName + `</td>
+                                    <td>` + val.type + `</td>
+                                    <td>` + val.regNo + `</td>
+                                    <td>` + val.make + ` ` + val.model + `</td>
+                                    <td>` + val.fare + `</td>
+                                    <td>` + val.status + `</td>
+                                </tr>`;
+
+                $(".oldDataTableRow").append(oldDataTableRow);
+            });
+        }
+    });
+
+
+    var _url_ongoing = 'http://localhost:8080/gocheeta-web-services/api/v1/booking/driver/ongoing/' + userId;
+
+    $.ajax({
+        type: "GET",
+        url: _url_ongoing,
+        dataType: "json",
+        success: function (response) {
+            console.log(response);
+            $.each(response, function (key, val) {
+                var currentBookings = `
+                                <tr>
+                                    <td>` + val.createdDate + `</td>
+                                    <td>` + val.pickup + `</td>
+                                    <td>` + val.destination + `</td>
+                                    <td>` + val.city + `</td>
+                                    <td>` + val.customerName + `</td>
+                                    <td>` + val.customerMobile + `</td>
+                                    <td>` + val.type + `</td>
+                                    <td>` + val.regNo + `</td>
+                                    <td>` + val.make + ` ` + val.model + `</td>
+                                    <td>` + val.fare + `</td>
+                                    <td><button type="button" class="btn btn-success btn-sm" id="complete-btn">Complete</button></td>
+                                </tr>`;
+
+                $(".ongoingTableRow").append(currentBookings);
+            });
+        }
+    });
+
+ var _url_new = 'http://localhost:8080/gocheeta-web-services/api/v1/booking/driver/booking-request/1';
+
+    $.ajax({
+        type: "GET",
+        url: _url_new,
+        dataType: "json",
+        success: function (response) {
+            console.log(response);
+            $.each(response, function (key, val) {
+                var currentBookings = `
+                                <tr>
+                                    <td>` + val.createdDate + `</td>
+                                    <td>` + val.pickup + `</td>
+                                    <td>` + val.destination + `</td>
+                                    <td>` + val.city + `</td>
+                                    <td>` + val.customerName + `</td>
+                                    <td>` + val.customerMobile + `</td>
+                                    <td>` + val.type + `</td>
+                                    <td>` + val.regNo + `</td>
+                                    <td>` + val.make + ` ` + val.model + `</td>
+                                    <td>` + val.fare + `</td>
+                                    <td><button type="button" class="btn btn-success btn-sm" id="complete-btn">Accept</button></td>
+                                </tr>`;
+
+                $(".ongoingTableRow").append(currentBookings);
+            });
+        }
+    });
+
 
 </script>
 <%@ include file = "footer.jsp" %>

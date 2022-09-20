@@ -78,4 +78,13 @@
                 location.reload();
             }
 
+            var userId = Cookies.get('userId');
+            var userRole = Cookies.get('role');
+
+//
+//    if (userId == "undefined" || userRole == null || user != "customer") {
+//        window.location.replace("customer-login.jsp");
+//    }
+
+
         </script>

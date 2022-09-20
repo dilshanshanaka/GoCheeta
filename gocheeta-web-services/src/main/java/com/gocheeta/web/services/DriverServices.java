@@ -117,4 +117,46 @@ public class DriverServices {
         return Response.status(status).entity(gson.toJson(response)).build();
 
     }
+    
+    @PUT
+    @Path("/booking-status/{bookingId}")
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response updateBookingStatus(String json, @PathParam("bookingId") int bookingId) {
+        boolean result = false;
+        int status;
+
+        // JSON data to Java Object
+        Booking b = new Gson().fromJson(json, Booking.class);
+
+        try {
+            // Database Connection
+            Connection conn = DBUtil.getInstance();
+
+            // SQL Query
+            String query = "UPDATE bookings SET status = '" + b.getStatus() + "' "
+                    + "WHERE id ='" + bookingId + "'";
+
+            Statement st = conn.createStatement();
+            st.executeUpdate(query);
+
+            result = true;
+        } catch (SQLException e) {
+            System.out.println(e);
+        }
+
+        // Response Message
+        ResponseMessage response = new ResponseMessage();
+
+        if (result) {
+            response.setMessage("Sucessfully Updated");
+            status = 200;
+        } else {
+            response.setMessage("Error occurred");
+            status = 501;
+        }
+
+        Gson gson = new GsonBuilder().create();
+        return Response.status(status).entity(gson.toJson(response)).build();
+
+    }
 }

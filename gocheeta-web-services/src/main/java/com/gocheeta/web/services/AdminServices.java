@@ -405,7 +405,8 @@ public class AdminServices {
         Connection conn = DBUtil.getInstance();
 
         // SQL Query
-        String query = "SELECT branch_id ,SUM(fare) AS totalEarnings FROM bookings GROUP BY branch_id";
+        String query = "SELECT b.branch_id, br.city, SUM(b.fare) AS totalEarnings "
+                + "FROM bookings AS b INNER JOIN branches AS br ON b.branch_id = br.id GROUP BY branch_id";
 
         try {
             Statement st = conn.createStatement();
@@ -415,6 +416,7 @@ public class AdminServices {
                 Branch b = new Branch();
 
                 b.setBranchId(result.getInt("branch_id"));
+                b.setCity(result.getString("city"));
                 b.setTotalEarnings(result.getDouble("totalEarnings"));
 
                 branches.add(b);
