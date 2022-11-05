@@ -43,7 +43,7 @@ public class AdminServices {
                 + "v.reg_no FROM bookings AS b INNER JOIN customers AS c ON b.customer_id = c.id "
                 + "LEFT JOIN drivers AS d ON b.driver_id=d.id LEFT JOIN vehicle_categories AS vc "
                 + "ON b.vehicle_category_id=vc.id INNER JOIN branches AS br ON b.branch_id = br.id "
-                + "LEFT JOIN vehicles AS v ON b.vehicle_id=v.id";
+                + "LEFT JOIN vehicles AS v ON b.vehicle_id=v.id ORDER BY bookingId DESC";
 
         try {
             Statement st = conn.createStatement();

@@ -10,7 +10,7 @@
         <h4>Earnings</h4>
         <hr>
         <div class="row branch-earning">
-        
+
         </div>
 
         <div class="row mt-5">
@@ -35,7 +35,7 @@
                 </tr>
             </thead>
             <tbody class="tableRow">
-                
+
             </tbody>
         </table>
     </div>
@@ -57,12 +57,12 @@
                 <div class="card mb-3" style="max-width: 540px;">
                     <div class="row g-0">
                         <div class="col-md-4">
-                            <img src="`+ val.imagePath +`" class="img-fluid rounded-start" alt="">
+                            <img src="` + val.imagePath + `" class="img-fluid rounded-start" alt="">
                         </div>
                         <div class="col-md-8">
                             <div class="card-body">
-                                <h5 class="card-title">`+ val.type +`</h5>
-                                <p class="card-text">Passenger Seats: `+ val.passengerSeats +` <br>First KM Fare: LKR `+ val.firstKm +` <br> Extra KM Fare: LKR `+ val.perKm +`</p>
+                                <h5 class="card-title">` + val.type + `</h5>
+                                <p class="card-text">Passenger Seats: ` + val.passengerSeats + ` <br>First KM Fare: LKR ` + val.firstKm + ` <br> Extra KM Fare: LKR ` + val.perKm + `</p>
                             </div>
                         </div>
                     </div>
@@ -73,7 +73,7 @@
             });
         }
     });
-    
+
     $.ajax({
         type: "GET",
         url: branchEarningsUrl,
@@ -84,8 +84,8 @@
                 var branch = `<div class="col-sm-3">
                 <div class="card">
                     <div class="card-body">
-                        <h5 class="card-title">`+ val.city +`</h5>
-                        <p class="card-text">Total Earnings: <br> <strong>LKR `+ val.totalEarnings +`</strong></p>
+                        <h5 class="card-title">` + val.city + `</h5>
+                        <p class="card-text">Total Earnings: <br> <strong>LKR ` + val.totalEarnings.toFixed(2) + `</strong></p>
                     </div>
                 </div>
             </div>`;
@@ -94,7 +94,7 @@
             });
         }
     });
-    
+
     var _url = 'http://localhost:8080/gocheeta-web-services/api/v1/admin/bookings';
 
     $.ajax({
@@ -103,7 +103,8 @@
         dataType: "json",
         success: function (response) {
             console.log(response);
-            $.each(response, function (key, val) {       
+
+            $.each(response, function (key, val) {
                 var tableRow = `
                 <tr>
                     <th scope="row">` + val.bookingId + `</th>
@@ -112,8 +113,11 @@
                     <td>` + val.status + `</td>
                 </tr>`;
 
+
                 $(".tableRow").append(tableRow);
             });
+
+
         }
     });
 </script>

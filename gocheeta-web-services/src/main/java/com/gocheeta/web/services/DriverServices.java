@@ -117,7 +117,7 @@ public class DriverServices {
         return Response.status(status).entity(gson.toJson(response)).build();
 
     }
-    
+
     @PUT
     @Path("/booking-status/{bookingId}")
     @Consumes(MediaType.APPLICATION_JSON)
@@ -159,4 +159,58 @@ public class DriverServices {
         return Response.status(status).entity(gson.toJson(response)).build();
 
     }
+
+    @PUT
+    @Path("/accept")
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response acceptBooking(String json) {
+        int vehicleId = 0;
+        boolean result = false;
+        int status;
+
+        Booking b = new Gson().fromJson(json, Booking.class);
+
+        int bookingId = b.getBookingId();
+        int driverId = b.getDriverId();
+        int vehicleCategoryId = b.getVehicleCategoryId();
+        int branchId = b.getBranchId();
+
+        // Database Connection
+        Connection conn = DBUtil.getInstance();
+
+        try {
+            String query = "SELECT id FROM vehicles WHERE vehicle_category_id = '" + vehicleCategoryId + "' AND branch_id = '" + branchId + "' AND availability  = 1 LIMIT 1";
+            Statement st = conn.createStatement();
+            ResultSet r = st.executeQuery(query);
+
+            while (r.next()) {
+                vehicleId = r.getInt("id");
+            }
+
+            // SQL Query
+            String queryTwo = "UPDATE bookings SET vehicle_id = '" + vehicleId + "', driver_id ='" + driverId + "', status = 'accepted' "
+                    + "WHERE id ='" + bookingId + "'";
+
+            Statement stTwo = conn.createStatement();
+            stTwo.executeUpdate(queryTwo);
+
+            result = true;
+        } catch (SQLException e) {
+        }
+        
+        // Response Message
+        ResponseMessage response = new ResponseMessage();
+
+        if (result) {
+            response.setMessage("Sucessfully Updated");
+            status = 200;
+        } else {
+            response.setMessage("Error occurred");
+            status = 501;
+        }
+
+        Gson gson = new GsonBuilder().create();
+        return Response.status(status).entity(gson.toJson(response)).build();
+    }
+
 }

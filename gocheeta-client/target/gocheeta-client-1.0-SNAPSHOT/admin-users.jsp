@@ -65,7 +65,6 @@
     var _url_user = 'http://localhost:8080/gocheeta-web-services/api/v1/admin/all-customers';
     var _url_driver = 'http://localhost:8080/gocheeta-web-services/api/v1/admin/all-drivers';
 
-
     $.ajax({
         type: "GET",
         url: _url_user,
@@ -75,9 +74,9 @@
 
             $.each(response, function (key, val) {
                 if (val.status == "active") {
-                    manageButton = `<button type="button" class="btn btn-danger btn-sm">Block</button>`;
+                    manageButton = `<button type="button" class="btn btn-danger btn-sm" onclick="updateUserStatus(`+ val.id +`, 'blocked')">Block</button>`;
                 } else {
-                    manageButton = `<button type="button" class="btn btn-success btn-sm">Activate</button>`;
+                    manageButton = `<button type="button" class="btn btn-success btn-sm" onclick="updateUserStatus(`+ val.id +`, 'active')">Activate</button>`;
                 }
 
                 var customerRow = `
@@ -105,7 +104,7 @@
             var avalible = "";
 
             $.each(response, function (key, val) {
-                
+
                 if (val.availability) {
                     avalible = "available";
                 } else {
@@ -113,9 +112,9 @@
                 }
 
                 if (val.status == "active") {
-                    manageButton = `<button type="button" class="btn btn-danger btn-sm">Block</button>`;
+                    manageButton = `<button type="button" class="btn btn-danger btn-sm" onclick="updateUserStatus(`+ val.id +`, 'blocked')">Block</button>`;
                 } else {
-                    manageButton = `<button type="button" class="btn btn-success btn-sm">Activate</button>`;
+                    manageButton = `<button type="button" class="btn btn-success btn-sm" onclick="updateUserStatus(`+ val.id +`, 'active')">Activate</button>`;
                 }
 
                 var driverRow = `
@@ -135,6 +134,28 @@
             });
         }
     });
+
+
+
+
+    function updateUserStatus(id, status) {
+        event.preventDefault();
+        var formData = {
+            id: id,
+            status: status
+        };
+        
+        $.ajax({
+            type: "PUT",
+            url: "http://localhost:8080/gocheeta-web-services/api/v1/admin/manage-user/" + id + "/" + status,
+            contentType: 'application/json',
+            data: JSON.stringify(formData),
+            encode: true
+
+        }).done(function (data) {
+            location.reload();
+        });
+    }
 
 </script>    
 

@@ -35,7 +35,7 @@ public class BookingServices {
         // SQL Query
         String query = "SELECT b.id as bookingId, b.pickup, b.destination, "
                 + "b.fare, b.customer_id, "
-                + "b.status, "
+                + "b.status, b.date_and_time, "
                 + "CONCAT(d.first_name, ' ', d.last_name) AS driverName, "
                 + "d.mobile AS driverMobile, vc.type AS vehicle_type, br.city, v.make, v.model, "
                 + "v.reg_no FROM bookings AS b INNER JOIN customers AS c ON b.customer_id = c.id "
@@ -63,6 +63,7 @@ public class BookingServices {
                 b.setMake(result.getString("make"));
                 b.setModel(result.getString("model"));
                 b.setRegNo(result.getString("reg_no"));
+                b.setCreatedDate(result.getDate("date_and_time"));
 
                 bookings.add(b);
 
@@ -316,7 +317,7 @@ public class BookingServices {
                 customerId = r.getInt("id");
             }
 
-            String queryTwo = "SELECT id FROM bookings WHERE customer_id = " + customerId + " AND status = 'pending' ORDER BY id DESC LIMIT 1";
+            String queryTwo = "SELECT id FROM bookings WHERE customer_id = " + customerId + " AND status = 'pending' OR status = 'accepted' ORDER BY id DESC LIMIT 1";
             Statement stTwo = conn.createStatement();
             ResultSet rs = stTwo.executeQuery(queryTwo);
 
@@ -346,7 +347,7 @@ public class BookingServices {
                 + "LEFT JOIN drivers AS d ON b.driver_id=d.id LEFT JOIN vehicle_categories AS vc "
                 + "ON b.vehicle_category_id=vc.id INNER JOIN branches AS br ON b.branch_id = br.id "
                 + "LEFT JOIN vehicles AS v ON b.vehicle_id=v.id WHERE d.user_id = '" + userId + "' && "
-                + "b.status = 'completed' ORDER BY b.id DESC;";
+                + "b.status = 'completed' || b.status = 'canceled' ORDER BY b.id DESC;";
 
         try {
             Statement st = conn.createStatement();
@@ -397,7 +398,7 @@ public class BookingServices {
                 + "LEFT JOIN drivers AS d ON b.driver_id=d.id LEFT JOIN vehicle_categories AS vc "
                 + "ON b.vehicle_category_id=vc.id INNER JOIN branches AS br ON b.branch_id = br.id "
                 + "LEFT JOIN vehicles AS v ON b.vehicle_id=v.id WHERE d.user_id = '" + userId + "' && "
-                + "b.status = 'active' ORDER BY b.id DESC;";
+                + "b.status = 'accepted' ORDER BY b.id DESC;";
 
         try {
             Statement st = conn.createStatement();
@@ -443,7 +444,7 @@ public class BookingServices {
         // SQL Query
         String query = "SELECT b.id as bookingId, b.date_and_time, b.pickup, b.destination, "
                 + "b.fare, b.customer_id, b.status, CONCAT(c.first_name, ' ', c.last_name) AS customerName, "
-                + "c.mobile AS customerMobile, vc.type AS vehicle_type, br.city, v.make, v.model, v.reg_no "
+                + "c.mobile AS customerMobile, b.vehicle_category_id AS vehicle_category_id ,vc.type AS vehicle_type, br.city, v.make, v.model, v.reg_no "
                 + "FROM bookings AS b INNER JOIN customers AS c ON b.customer_id = c.id "
                 + "LEFT JOIN drivers AS d ON b.driver_id=d.id LEFT JOIN vehicle_categories AS vc "
                 + "ON b.vehicle_category_id=vc.id INNER JOIN branches AS br ON b.branch_id = br.id "
@@ -466,7 +467,8 @@ public class BookingServices {
                 b.setCustomerName(result.getString("customerName"));
                 b.setCustomerMobile(result.getString("customerMobile"));
                 b.setCity(result.getString("city"));
-                b.setType(result.getString("vehicle_type"));
+                b.setType(result.getString("vehicle_type"));                
+                b.setVehicleCategoryId(result.getInt("vehicle_category_id"));
                 b.setMake(result.getString("make"));
                 b.setModel(result.getString("model"));
                 b.setRegNo(result.getString("reg_no"));

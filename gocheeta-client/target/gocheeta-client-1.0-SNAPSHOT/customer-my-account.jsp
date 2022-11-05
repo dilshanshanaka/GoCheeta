@@ -87,7 +87,6 @@
                                     <th scope="col">Make & Model</th>
                                     <th scope="col">Fare (LKR)</th>
                                     <th scope="col">Status</th>
-                                    <th scope="col">Review</th>
                                 </tr>
                             </thead>
                             <tbody class="table-data">
@@ -179,34 +178,41 @@
         });
     });
 
-    var booking_data_url = 'http://localhost:8080/gocheeta-web-services/api/v1/booking/customer/'+ userId;
+    var booking_data_url = 'http://localhost:8080/gocheeta-web-services/api/v1/booking/customer/' + userId;
 
     $.ajax({
         type: "GET",
         url: booking_data_url,
         dataType: "json",
         success: function (response) {
-
             $.each(response, function (key, val) {
+                var driverName = val.driverName;
+                var make = val.make;
+                var model = val.model;
+                var regNo = val.regNo;
 
+                if(driverName == undefined){
+                    driverName = "N/A";
+                }
+
+                if (make == undefined) {
+                    make = "N/A";
+                    model = "N/A";
+                    regNo = "N/A";
+                }
 
                 var tableRow = `<tr>
                                     <th scope="row">` + val.bookingId + `</th>
-                                    <td>2022/09/10 12.20 PM</td>
+                                    <td>` + val.createdDate +`</td>
                                     <td>` + val.pickup + `</td>
                                     <td>` + val.destination + `</td>
                                     <td>` + val.city + `</td>
-                                    <td>` + val.driverName + `</td>
+                                    <td>` + driverName + `</td>
                                     <td>` + val.type + `</td>
-                                    <td>` + val.regNo + `</td>
-                                    <td>` + val.make + ` ` + val.model + `</td>
-                                    <td> Rs. ` + val.fare + `</td>
+                                    <td>` + regNo + `</td>
+                                    <td>` + make + ` ` + model + `</td>
+                                    <td>` + val.fare.toFixed(2) + `</td>
                                     <td>` + val.status + `</td>
-                                    <td>
-                                        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#model` + val.bookingId + `">
-                                            View
-                                        </button>
-                                    </td>
                                 </tr>`;
 
                 var feedback = `

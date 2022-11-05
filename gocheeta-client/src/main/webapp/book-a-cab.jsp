@@ -5,20 +5,13 @@
 
 <%@ include file = "header.jsp" %>
 <script>
-    var isBookingRequest = false;
-
-    var bookingReq = Cookies.get('bookingReq');
-
-    if (bookingReq == "true") {
-        isBookingRequest = true;
+    // Check User Logged In
+    if (!loggedIn) {
+        window.location.replace("customer-login.jsp");
     }
 
-//    var userId = Cookies.get('userId');
-//    var userRole = Cookies.get('role');
-//
-//    if (userId == "undefined" || userRole == "undefined" || userRole != "Customer") {
-//        window.location.replace("customer-login.jsp");
-//    }
+    var isBookingRequest = false;
+
 
 </script>
 <!-- Header Start -->
@@ -164,7 +157,6 @@
 
     document.getElementById("fare").innerHTML = fare;
 
-
     function branchUpdate() {
         branchId = $("#branchId").val();
         document.getElementById("pickup").innerHTML = "";
@@ -175,10 +167,10 @@
             url: pickup_location_url,
             dataType: "json",
             success: function (response) {
-//            console.log(response);
                 $.each(response, function (key, val) {
                     var pickup = `<option value="` + val.pickup + `">` + val.pickup + `</option>`;
                     $(".pickup").append(pickup);
+
                 });
             }
         });
@@ -209,7 +201,6 @@
         document.getElementById("distance").innerHTML = distance;
     }
 
-
     function carSelect(src) {
         var carType = src.value;
 
@@ -239,12 +230,6 @@
         document.getElementById("fareAmount").value = fare;
     }
 
-//    document.getElementById("fare").innerHTML = fare;
-
-
-
-
-    // Fare Calculator
     function getFare(distance, firstKm, perKm) {
         var fare;
         if (distance <= 1) {
@@ -255,6 +240,8 @@
         return fare;
     }
 
+
+    // Unchecked
     function clearBooking() {
         Cookies.remove('bookingReq');
         Cookies.remove('bookingId');
@@ -262,8 +249,8 @@
     }
 
 
-
     $(document).ready(function () {
+        // Add New Booking
         $("#addNewBooking").submit(function (event) {
 
             var formData = {
@@ -271,11 +258,10 @@
                 pickup: $("#pickup").val(),
                 destination: $("#destinationName").val(),
                 fare: $("#fareAmount").val(),
-                customerId: 13,
+                customerId: userId,
                 vehicleCategoryId: $('input[name="vehicleType"]:checked').val()
             };
 
-            console.log(formData);
             // Register Company User
             $.ajax({
                 type: "POST",
@@ -283,34 +269,34 @@
                 contentType: 'application/json',
                 data: JSON.stringify(formData),
                 dataType: "json",
-                encode: true,
+                encode: true
             }).done(function (data) {
                 Cookies.set('bookingReq', true);
+                location.reload();
             });
         });
     });
 
+    $.ajax({
+        type: "GET",
+        url: "http://localhost:8080/gocheeta-web-services/api/v1/booking/pending/" + userId,
+        dataType: "json",
+        success: function (response) {
+            Cookies.set('bookingId', response);
+            Cookies.set('bookingReq', true);
+        }
+    });
+
+    var bookingReq = Cookies.get('bookingReq');
+    if (bookingReq == "true") {
+        isBookingRequest = true;
+    }
 
 
-//    if (true) {
-//        var bookingId = Cookies.get('bookingId');
-//
-//        if (bookingId == "undefined") {
-//            $.ajax({
-//                type: "GET",
-//                url: "http://localhost:8080/gocheeta-web-services/api/v1/booking/pending/" + userId,
-//                dataType: "json",
-//                success: function (response) {
-//                    Cookies.set('bookingId', response);
-//                    location.reload();
-//                }
-//            });
-//        }
-
-
-
-        var booking_data_url = 'http://localhost:8080/gocheeta-web-services/api/v1/booking/9';
-
+    if (isBookingRequest) {
+        var bookingId = Cookies.get('bookingId');
+        var booking_data_url = 'http://localhost:8080/gocheeta-web-services/api/v1/booking/' + bookingId;
+        var close = "";
 
         $('#bookingDiv').hide();
         $.ajax({
@@ -318,6 +304,11 @@
             url: booking_data_url,
             dataType: "json",
             success: function (response) {
+                
+                if(response.status == "canceled" || response.status == "completed"){
+                    close = `<button class="btn btn-primary" onclick="clearBooking()" type="button">Close</button>`;
+                }
+                
                 if (response.status === "pending") {
                     var pendingMessage = `
                     <div class="row mt-3 justify-content-md-center">
@@ -328,7 +319,7 @@
                     </div>`;
 
                     $(".pending").append(pendingMessage);
-//                    setInterval('location.reload()', 7000);
+                    setInterval('location.reload()', 7000);
                 } else {
                     var bookingConfirmation = `
                     <div class="row mt-3 justify-content-md-center">
@@ -373,10 +364,10 @@
                                 <h5 class="mt-3 mb-2 lead">Fare Details</h5>
 
                                 <dt class="col-sm-3">Total Fare</dt>
-                                <dd class="col-sm-9">LKR ` + response.fare + `</dd>
+                                <dd class="col-sm-9">LKR ` + response.fare.toFixed(2) + `</dd>
                             </dl>
                             <div class="d-grid gap-2 d-md-flex justify-content-md-end">
-                                <button class="btn btn-primary" onclick="clearBooking()" type="button">Close</button>
+                                `+ close +`
                             </div>
                         </div>
                     </div>`;

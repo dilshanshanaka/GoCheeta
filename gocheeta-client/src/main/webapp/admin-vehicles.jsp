@@ -82,7 +82,7 @@
 
 <script>
     var _url = 'http://localhost:8080/gocheeta-web-services/api/v1/admin/all-vehicles';
-    var addNewVehicleUrl = "http://localhost:8080/gocheeta-web-services/api/v1/admin/add-new-driver";
+    var addNewVehicleUrl = "http://localhost:8080/gocheeta-web-services/api/v1/admin/add-new-vehicle";
     var vehicleCategoriesUrl = "http://localhost:8080/gocheeta-web-services/api/v1/booking/vehicleCategories";
 
     $.ajax({
@@ -91,9 +91,10 @@
         dataType: "json",
         success: function (response) {
             var avalible = "";
-            var Remove = `<button type="button" class="btn btn-danger btn-sm">Delete</button>`;
 
             $.each(response, function (key, val) {
+                var Remove = `<button type="button" class="btn btn-danger btn-sm" onclick="deleteVehicle(` + val.vehicleId + `)">Delete</button>`;
+
                 if (val.availability) {
                     avalible = "available";
                 } else {
@@ -117,7 +118,7 @@
             });
         }
     });
-    
+
     $.ajax({
         type: "GET",
         url: vehicleCategoriesUrl,
@@ -125,13 +126,13 @@
         success: function (response) {
             console.log(response);
             $.each(response, function (key, val) {
-                var vehicleCatOption = `<option value="`+ val.vehicleCategoryId +`">`+ val.type +`</option>`;
+                var vehicleCatOption = `<option value="` + val.vehicleCategoryId + `">` + val.type + `</option>`;
 
                 $(".vehicleCatOption").append(vehicleCatOption);
             });
         }
     });
-    
+
 
     $(document).ready(function () {
         $("#addVehicle").submit(function (event) {
@@ -160,6 +161,16 @@
             event.preventDefault();
         });
     });
+
+    function deleteVehicle(id) {
+        $.ajax({
+            url: 'http://localhost:8080/gocheeta-web-services/api/v1/admin/delete-vehicle/' + id,
+            type: 'DELETE',
+            success: function (result) {
+                location.reload();
+            }
+        });
+    }
 
 </script>    
 

@@ -57,34 +57,39 @@
                     </ul>
                 </div>
 
-                <%
-                    boolean isLoggedin = true;
-                    if (isLoggedin) { %>
-                <a class="btn btn-outline-primary" type="button" href="customer-my-account.jsp">My Account</a>
-                <a class="btn btn-outline-danger mx-2" type="button" onclick="logout()">Logout</a>
-                <% } else { %>
-                <a class="btn btn-outline-primary" type="button" href="customer-login.jsp">Login</a>
-                <% }%>
+                <span class="login-my-account"></span>
 
             </div>
         </nav>
         <!-- Navbar Ends -->
 
         <script>
+            var userId = Cookies.get('userId');
+            var userRole = Cookies.get('role');
+            var loggedIn = false;
+
+            if (userId == undefined) {
+                var navButton = `
+                <a class="btn btn-outline-primary" type="button" href="customer-login.jsp">Login</a>`;
+            } else if (userId != undefined && userRole == "admin") {
+                window.location.replace("admin-dashboard.jsp");
+            } else {
+                var navButton = `
+                <a class="btn btn-outline-primary" type="button" href="customer-my-account.jsp">My Account</a>
+                <a class="btn btn-outline-danger mx-2" type="button" onclick="logout()">Logout</a>`;
+                
+                // Change Logged In Status 
+                loggedIn = true;
+            }
+
+            $(".login-my-account").append(navButton);
+
+
             // Logout Function
             function logout() {
                 Cookies.remove('userId');
                 Cookies.remove('role');
                 location.reload();
             }
-
-            var userId = Cookies.get('userId');
-            var userRole = Cookies.get('role');
-
-//
-//    if (userId == "undefined" || userRole == null || user != "customer") {
-//        window.location.replace("customer-login.jsp");
-//    }
-
 
         </script>
