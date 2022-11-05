@@ -6,11 +6,11 @@ BSc (Hons) in Software Engineering - CIS6003  Advanced Programming (Coursework -
 </p>
 
 <p align="center">
-  <img src="https://user-images.githubusercontent.com/52209184/200101245-baf6b425-d73d-49e1-b2bd-f197dc3b4c29.jpg" width="500px" alt="eClassLearning Homepage">
+  <img src="https://user-images.githubusercontent.com/52209184/200101403-b1037df6-0d40-439d-a6dd-954550124596.jpg" width="500px" alt="eClassLearning Homepage">
 </p>
 
 ## Tech Stack
 
 - Front End - HTML5, CSS3, Bootstrap 5, JavaScript, jQuery
-- Back End - Java 
+- Back End - Java, REST API
 - Database - MySQL 8
